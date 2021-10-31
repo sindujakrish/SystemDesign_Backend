@@ -38,15 +38,26 @@ public class UserDetails {
     @Column(name = "UConfirmPassword")
     private String ConfirmPassword;
 
-    @Column(name = "accountStatus")
-    private boolean accountVerified;
 
-    public boolean isAccountVerified() {
-        return accountVerified;
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
+    private boolean enabled;
+
+    public String getVerificationCode() {
+        return verificationCode;
     }
 
-    public void setAccountVerified(boolean accountVerified) {
-        this.accountVerified = accountVerified;
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public Integer getId() {
