@@ -11,5 +11,6 @@ import java.util.Optional;
 public interface UserDetailsDao extends JpaRepository<UserDetails, Integer> {
 
     Optional<UserDetails> findByEmail(String email);
+    UserDetails findByVerificationCode(String verificationCode);
 
 }
