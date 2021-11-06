@@ -120,5 +120,4 @@ public class UserDetails {
     public void setConfirmPassword(String confirmPassword) {
         ConfirmPassword = confirmPassword;
     }
-    
 }
