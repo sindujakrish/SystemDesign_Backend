@@ -1,28 +1,24 @@
-/**
- * Project:Well-Being System
- * Creation Date: 22-10-21
- * Author: Sai Anushka
- * Package Created: Sai Anushka
- */
-
 package ie.wellbeing.service.impl;
 
 import ie.wellbeing.model.UserDetails;
 import ie.wellbeing.model.dao.UserDetailsDao;
 import ie.wellbeing.request.UserRequest;
+import ie.wellbeing.service.MembershipService;
 import ie.wellbeing.service.UserService;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -34,33 +30,38 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @Autowired
+    MembershipService membershipService;
+
+
     @Override
     public void registrationUser(UserRequest userRequest,String siteURL) throws IllegalStateException, MessagingException, UnsupportedEncodingException {
-            passwordEncoder=new BCryptPasswordEncoder();
-            Optional<UserDetails> useroptional = userDao.findByEmail(userRequest.getuEmail());
-            if (!useroptional.isPresent()) {
-                UserDetails userdetails = new UserDetails();
-                userdetails.setName(userRequest.getuName());
-                userdetails.setEmail(userRequest.getuEmail());
-                userdetails.setPhone(userRequest.getuPhone());
-                userdetails.setAge(userRequest.getuAge());
-                userdetails.setCity(userRequest.getuCity());
-                if(userRequest.getuCreatePassword().equals(userRequest.getuConfirmPassword())){
-                        String encodedPassword=this.passwordEncoder.encode(userRequest.getuConfirmPassword());
-                        userdetails.setConfirmPassword(encodedPassword);
-                        userdetails.setCreatePassword(encodedPassword);
-                }
-                else{
-                    throw new IllegalStateException("Password Mismatch");
-                }
-                //userdetails.setCreatePassword(userRequest.getuCreatePassword());
-                //userdetails.setConfirmPassword(userRequest.getuConfirmPassword());
-                userDao.save(userdetails);
-                sendVerificationEmail(userdetails, siteURL);
+        passwordEncoder=new BCryptPasswordEncoder();
+        Optional<UserDetails> useroptional = userDao.findByEmail(userRequest.getuEmail());
+        if (!useroptional.isPresent()) {
+            UserDetails userdetails = new UserDetails();
+            userdetails.setName(userRequest.getuName());
+            userdetails.setEmail(userRequest.getuEmail());
+            userdetails.setPhone(userRequest.getuPhone());
+            userdetails.setAge(userRequest.getuAge());
+            userdetails.setCity(userRequest.getuCity());
+            userdetails.setMid(membershipService.handle());
+            if(userRequest.getuCreatePassword().equals(userRequest.getuConfirmPassword())){
+                String encodedPassword=this.passwordEncoder.encode(userRequest.getuConfirmPassword());
+                userdetails.setConfirmPassword(encodedPassword);
+                userdetails.setCreatePassword(encodedPassword);
             }
             else{
-            throw new IllegalStateException("User Already registered please login");
+                throw new IllegalStateException("Password Mismatch");
             }
+            //userdetails.setCreatePassword(userRequest.getuCreatePassword());
+            //userdetails.setConfirmPassword(userRequest.getuConfirmPassword());
+            userDao.save(userdetails);
+            sendVerificationEmail(userdetails, siteURL);
+        }
+        else{
+            throw new IllegalStateException("User Already registered please login");
+        }
     }
 
     @Override
