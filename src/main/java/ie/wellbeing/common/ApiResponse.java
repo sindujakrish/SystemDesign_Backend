@@ -18,7 +18,8 @@ public class ApiResponse implements Serializable
     private int status;
 
     private Object data;
-    
+
+    //Has Error Message defined
     private ApiResponseError error;
 
     

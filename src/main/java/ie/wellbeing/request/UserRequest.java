@@ -1,12 +1,15 @@
 package ie.wellbeing.request;
 
 
+import javax.validation.constraints.Size;
+
 public class UserRequest {
 
     private String uName;
 
     private String uEmail;
 
+    @Size(max = 10)
     private Integer uPhone;
 
     private String uCity;
@@ -15,8 +18,10 @@ public class UserRequest {
 
     private Integer uAge;
 
+    @Size(max = 8)
     private String uCreatePassword;
 
+    @Size(max = 8)
     private String uConfirmPassword;
 
     public String getuName() {

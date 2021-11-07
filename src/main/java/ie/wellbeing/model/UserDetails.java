@@ -9,7 +9,16 @@ import javax.validation.constraints.Email;
 public class UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(
+            name="user_sequence",
+            sequenceName="user_sequence",
+            allocationSize=1
+    )
+    @GeneratedValue(
+            strategy=GenerationType.SEQUENCE,
+            generator="user_sequence"
+    )
+
     @Column(name = "UID")
     private Integer id;
 
@@ -38,16 +47,15 @@ public class UserDetails {
     @Column(name = "UConfirmPassword")
     private String ConfirmPassword;
 
-    @Column(name = "accountStatus")
-    private boolean accountVerified;
+    @Column(name = "membership_id")
+    private Integer mid;
 
-    public boolean isAccountVerified() {
-        return accountVerified;
-    }
 
-    public void setAccountVerified(boolean accountVerified) {
-        this.accountVerified = accountVerified;
-    }
+    @Column(name = "verification_code", length = 64)
+    private String verificationCode;
+
+    private boolean enabled;
+
 
     public Integer getId() {
         return id;
@@ -120,4 +128,29 @@ public class UserDetails {
     public void setConfirmPassword(String confirmPassword) {
         ConfirmPassword = confirmPassword;
     }
+
+    public Integer getMid() {
+        return mid;
+    }
+
+    public void setMid(Integer mid) {
+        this.mid = mid;}
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+
+    }
 }
+
