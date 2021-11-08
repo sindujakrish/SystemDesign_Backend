@@ -38,8 +38,6 @@
                     <div class="form-group">
                         <input class="form-control" id="email" name="email"
                                placeholder="Email Address" type="email" required>
-                        <input class="form-control" id="price" name="price"
-                               placeholder="Price in EUR" type="price" required>
                     </div>
                     <!-- Used to display Element errors. -->
                     <div class="text-danger w-100" id="card-errors" role="alert"></div>
@@ -112,10 +110,9 @@
                     // Send the token to your server.
                     var token = result.token.id;
                     var email = $('#email').val();
-                    var price = $('#price').val();
                     $.post(
-                        "/payment/create-charge",
-                        {email: email, token: token, price: price},
+                        "/payment-stripe/create-charge",
+                        {email: email, token: token},
                         function (data) {
                             alert(data.details);
                         }, 'json');

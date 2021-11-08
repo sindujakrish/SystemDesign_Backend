@@ -1,47 +1,24 @@
 package ie.wellbeing.controller;
 
-import ie.wellbeing.common.Response;
-import ie.wellbeing.service.PaymentStripeService;
+import ie.wellbeing.common.ApiResponse;
+import ie.wellbeing.common.ApiResponseBuilder;
+import ie.wellbeing.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-
-@Controller
+@RestController
 @RequestMapping("payment")
 public class PaymentController {
 
-    @Value("${stripe.key.public}")
-    private String API_PUBLIC_KEY;
-
     @Autowired
-    private PaymentStripeService paymentStripeService;
+    PaymentService paymentService;
 
-
-    @GetMapping("/charge")
-    public String chargePage(Model model) {
-        model.addAttribute("stripePublicKey", API_PUBLIC_KEY);
-        return "charge";
+    @GetMapping("/getAllPayment")
+    public ApiResponse getAllPayment() {
+        return ApiResponseBuilder.success().data(paymentService.getAllPaymentDetails()).build();
     }
 
-    @PostMapping("/create-charge")
-    public @ResponseBody Response createCharge(String email, String token, Integer price ) {
 
-        if (token == null) {
-            return new Response(false, "Stripe payment token is missing. please try again later.");
-        }
-
-        String chargeId = paymentStripeService.createCharge(email, token, price*100);
-        if (chargeId == null) {
-            return new Response(false, "An error accurred while trying to charge.");
-        }
-
-        // You may want to store charge id along with order information
-        return new Response(true, "Success your charge id is " + chargeId);
-    }
 }
