@@ -36,6 +36,13 @@ dependencies {
 
 	//thyme Leaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	// https://mvnrepository.com/artifact/org.mockito/mockito-core
+	testImplementation 'org.mockito:mockito-inline:3.8.0'
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testImplementation 'org.assertj:assertj-core:3.21.0'
+
+
 }
 
 test {
